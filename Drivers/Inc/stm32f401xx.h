@@ -16,6 +16,34 @@
 #define __vo volatile									// HW register qualifier (prevents unwanted compiler optimizations)
 
 
+/* ========================= ARM NVIC Registers ========================= */
+
+/* NVIC Interrupt Set-Enable Registers */
+#define NVIC_ISER0					((__vo uint32_t*)0xE000E100)	/*!< Interrupt Set-Enable Register 0 */
+#define NVIC_ISER1					((__vo uint32_t*)0xE000E104)	/*!< Interrupt Set-Enable Register 1 */
+#define NVIC_ISER2					((__vo uint32_t*)0xE000E108)	/*!< Interrupt Set-Enable Register 2 */
+#define NVIC_ISER3					((__vo uint32_t*)0xE000E10C)	/*!< Interrupt Set-Enable Register 3 */
+#define NVIC_ISER4					((__vo uint32_t*)0xE000E110)	/*!< Interrupt Set-Enable Register 4 */
+#define NVIC_ISER5					((__vo uint32_t*)0xE000E114)	/*!< Interrupt Set-Enable Register 5 */
+#define NVIC_ISER6					((__vo uint32_t*)0xE000E118)	/*!< Interrupt Set-Enable Register 6 */
+#define NVIC_ISER7					((__vo uint32_t*)0xE000E11C)	/*!< Interrupt Set-Enable Register 7 */
+
+/* NVIC Interrupt Clear-Enable Registers */
+#define NVIC_ICER0					((__vo uint32_t*)0xE000E180)	/*!< Interrupt Clear-Enable Register 0 */
+#define NVIC_ICER1					((__vo uint32_t*)0xE000E184)	/*!< Interrupt Clear-Enable Register 1 */
+#define NVIC_ICER2					((__vo uint32_t*)0xE000E188)	/*!< Interrupt Clear-Enable Register 2 */
+#define NVIC_ICER3					((__vo uint32_t*)0xE000E18C)	/*!< Interrupt Clear-Enable Register 3 */
+#define NVIC_ICER4					((__vo uint32_t*)0xE000E190)	/*!< Interrupt Clear-Enable Register 4 */
+#define NVIC_ICER5					((__vo uint32_t*)0xE000E194)	/*!< Interrupt Clear-Enable Register 5 */
+#define NVIC_ICER6					((__vo uint32_t*)0xE000E198)	/*!< Interrupt Clear-Enable Register 6 */
+#define NVIC_ICER7					((__vo uint32_t*)0xE000E19C)	/*!< Interrupt Clear-Enable Register 7 */
+
+/* NVIC priority register base address */
+#define NVIC_PR_BASE_ADDR			((__vo uint32_t*)0xE000E400)
+
+/* Number of implemented priority bits */
+#define NO_PR_BITS_IMPLEMENTED		4
+
 /******************************** Memory Base Addresses ********************************/
 
 #define FLASH_BASEADDR						0x08000000U		// Flash base (user application code)
@@ -130,6 +158,27 @@ typedef struct
 	__vo uint32_t DCKCFGR;									/*!< Dedicated clocks configuration register,   Offset: 0x8C */
 } RCC_RegDef_t;
 
+/* EXTI register map (offsets from EXTI base address) */
+typedef struct
+{
+	__vo uint32_t IMR;										/*!< Interrupt mask register,            Offset: 0x00 */
+	__vo uint32_t EMR;										/*!< Event mask register,                Offset: 0x04 */
+	__vo uint32_t RTSR;										/*!< Rising trigger selection register,  Offset: 0x08 */
+	__vo uint32_t FTSR;										/*!< Falling trigger selection register, Offset: 0x0C */
+	__vo uint32_t SWIER;									/*!< Software interrupt event register,  Offset: 0x10 */
+	__vo uint32_t PR;										/*!< Pending register,                   Offset: 0x14 */
+} EXTI_RegDef_t;
+
+/* SYSCFG register map (offsets from SYSCFG base address) */
+typedef struct
+{
+	__vo uint32_t MEMRMP;									/*!< Memory remap register,              Offset: 0x00 */
+	__vo uint32_t PMC;										/*!< Peripheral mode configuration,      Offset: 0x04 */
+	__vo uint32_t EXTICR[4];								/*!< EXTI configuration registers,        Offsets: 0x08, 0x0C, 0x10, 0x14 */
+	__vo uint32_t CMPCR;									/*!< Compensation cell control register, Offset: 0x20 */
+} SYSCFG_RegDef_t;
+
+
 
 /******************************** Peripheral Pointer Macros ********************************/
 
@@ -143,6 +192,9 @@ typedef struct
 
 #define RCC								((RCC_RegDef_t*) RCC_BASEADDR)		/* RCC register access */
 
+#define EXTI							((EXTI_RegDef_t*) EXTI_BASEADDR)
+
+#define SYSCFG							((SYSCFG_RegDef_t*) SYSCFG_BASEADDR)
 
 /******************************** Peripheral Clock Gate Macros ******************************/
 
@@ -192,6 +244,36 @@ typedef struct
 #define SYSCFG_PCLK_DI()				(RCC->APB2ENR &= ~(1U << 14))		/* Disable clock for SYSCFG */
 
 
+/* */
+#define GPIOA_REG_RESET()				do { (RCC->AHB1RSTR |= (1U << 0)); (RCC->AHB1RSTR &= ~(1U << 0));}while(0)
+#define GPIOB_REG_RESET()				do { (RCC->AHB1RSTR |= (1U << 1)); (RCC->AHB1RSTR &= ~(1U << 1));}while(0)
+#define GPIOC_REG_RESET()				do { (RCC->AHB1RSTR |= (1U << 2)); (RCC->AHB1RSTR &= ~(1U << 2));}while(0)
+#define GPIOD_REG_RESET()				do { (RCC->AHB1RSTR |= (1U << 3)); (RCC->AHB1RSTR &= ~(1U << 3));}while(0)
+#define GPIOE_REG_RESET()				do { (RCC->AHB1RSTR |= (1U << 4)); (RCC->AHB1RSTR &= ~(1U << 4));}while(0)
+#define GPIOH_REG_RESET()				do { (RCC->AHB1RSTR |= (1U << 7)); (RCC->AHB1RSTR &= ~(1U << 7));}while(0)
+
+/*
+ * returns portcode for given GPIOx base address
+ */
+#define GPIO_BASEADDR_TO_CODE(x)		( (x == GPIOA) ? 0 : \
+										  (x == GPIOB) ? 1 : \
+										  (x == GPIOC) ? 2 : \
+										  (x == GPIOD) ? 3 : \
+										  (x == GPIOE) ? 4 : \
+										  (x == GPIOH) ? 7 : 0 )
+
+
+/* IRQ Numbers for the EXTI interrupt */
+#define IRQ_NO_EXTI0					6
+#define IRQ_NO_EXTI1					7
+#define IRQ_NO_EXTI2					8
+#define IRQ_NO_EXTI3					9
+#define IRQ_NO_EXTI4					10
+#define IRQ_NO_EXTI9_5					23
+#define IRQ_NO_EXTI15_10				40
+
+
+//some generic macros
 #define ENABLE  			1
 #define DISABLE 			0
 #define SET					ENABLE

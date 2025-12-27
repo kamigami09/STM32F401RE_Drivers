@@ -104,7 +104,47 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 
 	}else
 	{
-		//Interrupt mode for later
+		//Interrupt mode
+		//a . pin must be in input mode
+		//b . configure the edge trigger
+		//c . enable interrupt delivery from peripheral to the processor
+		//d . identify the IRQ number on which the processor accepts the interrupt
+		//e . configure IRQ Priority
+		//f . enable interrupt reception
+		//g . implement IRQ handler
+
+		if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_IT_FT)
+		{
+			//1 . configure the FTSR
+			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_IT_RT)
+		{
+			//1 . configure the RTSR
+			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->FTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_IT_RFT)
+		{
+			//1 . configure both the FTSR and RTSR
+			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+
+		}
+
+		//2 . configure the GPIO port selection in SYSCFG_EXTICR
+		uint8_t temp3, temp4;
+
+		temp3 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 4;
+		temp4 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4;
+		uint8_t portcode = GPIO_BASEADDR_TO_CODE(pGPIOHandle->pGPIOx);
+
+		SYSCFG_PCLK_EN();
+		SYSCFG->EXTICR[temp3] |= (portcode << (4 * temp4));
+
+		//3 . enable the EXTI interrupt delivery using IMR
+		EXTI->IMR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 	}
 
 	temp = 0;
@@ -157,7 +197,25 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
  */
 void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 {
-
+	if (pGPIOx == GPIOA)
+	{
+		GPIOA_REG_RESET();
+	}else if (pGPIOx == GPIOB)
+	{
+		GPIOB_REG_RESET();
+	}else if (pGPIOx == GPIOC)
+	{
+		GPIOC_REG_RESET();
+	}else if (pGPIOx == GPIOD)
+	{
+		GPIOD_REG_RESET();
+	}else if (pGPIOx == GPIOE)
+	{
+		GPIOE_REG_RESET();
+	}else if (pGPIOx == GPIOH)
+	{
+		GPIOH_REG_RESET();
+	}
 }
 
 
@@ -179,7 +237,11 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
  */
 uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
+	uint8_t value;
 
+	value = (uint8_t) (~(0xfe) & (pGPIOx->IDR >> PinNumber));
+
+	return value;
 }
 /*********************************************************************
  * @fn      		  - GPIO_ReadFromInputPort
@@ -196,7 +258,11 @@ uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
  */
 uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx)
 {
+	uint16_t value;
 
+	value = pGPIOx->IDR;
+
+	return value;
 }
 /*********************************************************************
  * @fn      		  - GPIO_WriteToOutputPin
@@ -215,7 +281,13 @@ uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx)
  */
 void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Value)
 {
-
+	if (Value == GPIO_PIN_SET)
+	{
+		pGPIOx->ODR |= (1 << PinNumber);
+	}else if (Value == GPIO_PIN_RESET)
+	{
+		pGPIOx->ODR &= ~(1 << PinNumber);
+	}
 }
 /*********************************************************************
  * @fn      		  - GPIO_WriteToOutputPort
@@ -233,7 +305,7 @@ void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Val
  */
 void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value)
 {
-
+	pGPIOx->ODR = Value;
 }
 /*********************************************************************
  * @fn      		  - GPIO_ToggleOutputPin
@@ -251,11 +323,74 @@ void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value)
  */
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
-
+	pGPIOx->ODR ^= (1 << PinNumber);
 }
 
 
 /* ========================= GPIO Interrupt APIs ========================= */
+
+/*********************************************************************
+ * @fn      		  - GPIO_IRQInterruptConfig
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ * @param[in]         -
+ * @param[in]         -
+ *
+ * @return            -
+ *
+ * @Note              -
+
+ */
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
+{
+	uint8_t temp1 = IRQNumber / 32;
+	uint8_t temp2 = IRQNumber % 32;
+	if (EnorDi == ENABLE)
+	{
+		switch (temp1)
+		{
+		case 0:
+			*NVIC_ISER0 |= (1 << temp2);
+		case 1:
+			*NVIC_ISER1 |= (1 << temp2);
+		case 2:
+			*NVIC_ISER2 |= (1 << temp2);
+		case 3:
+			*NVIC_ISER3 |= (1 << temp2);
+		case 4:
+			*NVIC_ISER4 |= (1 << temp2);
+		case 5:
+			*NVIC_ISER5 |= (1 << temp2);
+		case 6:
+			*NVIC_ISER6 |= (1 << temp2);
+		case 7:
+			*NVIC_ISER7 |= (1 << temp2);
+		}
+	}else
+	{
+		switch (temp1)
+		{
+		case 0:
+			*NVIC_ICER0 |= (1 << temp2);
+		case 1:
+			*NVIC_ICER1 |= (1 << temp2);
+		case 2:
+			*NVIC_ICER2 |= (1 << temp2);
+		case 3:
+			*NVIC_ICER3 |= (1 << temp2);
+		case 4:
+			*NVIC_ICER4 |= (1 << temp2);
+		case 5:
+			*NVIC_ICER5 |= (1 << temp2);
+		case 6:
+			*NVIC_ICER6 |= (1 << temp2);
+		case 7:
+			*NVIC_ICER7 |= (1 << temp2);
+		}
+	}
+}
 
 /*********************************************************************
  * @fn      		  - SPI_IRQPriorityConfig
@@ -271,10 +406,16 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
  * @Note              -
 
  */
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi)
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber,uint32_t IRQPriority)
 {
+	//1 . first let's find out the ipr register
+	uint8_t iprx = IRQNumber / 4;
+	uint8_t iprx_section =IRQNumber % 4;
 
+	uint8_t shift_amount = (8 * iprx_section) + (8 - NO_PR_BITS_IMPLEMENTED);
+	*(NVIC_PR_BASE_ADDR + (4 * iprx)) |= (IRQPriority << shift_amount);
 }
+
 /*********************************************************************
  * @fn      		  - GPIO_IRQHandling
  *
