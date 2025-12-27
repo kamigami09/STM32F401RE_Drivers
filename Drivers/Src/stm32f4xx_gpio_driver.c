@@ -419,9 +419,9 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber,uint32_t IRQPriority)
 /*********************************************************************
  * @fn      		  - GPIO_IRQHandling
  *
- * @brief             -
+ * @brief             - IRQHanling with the clearing of the pending bit
  *
- * @param[in]         -
+ * @param[in]         - PinNumber of the Port we are working with
  * @param[in]         -
  * @param[in]         -
  *
@@ -432,7 +432,10 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber,uint32_t IRQPriority)
  */
 void GPIO_IRQHandling(uint8_t PinNumber)
 {
-
+	if (EXTI->PR & (1 << PinNumber))
+	{
+		EXTI->PR |= (1 << PinNumber);
+	}
 }
 
 

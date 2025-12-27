@@ -130,7 +130,7 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
 /* ========================= GPIO Interrupt APIs ========================= */
 
 /* Configure GPIO interrupt */
-void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi);
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
 /* Sets the priority level of an interrupt */
 void GPIO_IRQPriorityConfig(uint8_t IRQNumber,uint32_t IRQPriority);
 /* Handle GPIO interrupt */

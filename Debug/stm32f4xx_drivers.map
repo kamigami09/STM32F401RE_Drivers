@@ -81,16 +81,18 @@ Discarded input sections
                 0x00000000       0x1e ./Drivers/Src/stm32f4xx_gpio_driver.o
  .text.GPIO_ToggleOutputPin
                 0x00000000       0x2a ./Drivers/Src/stm32f4xx_gpio_driver.o
- .text.GPIO_IRQConfig
-                0x00000000       0x1e ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .text.GPIO_IRQInterruptConfig
+                0x00000000      0x210 ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .text.GPIO_IRQPriorityConfig
+                0x00000000       0x54 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .text.GPIO_IRQHandling
                 0x00000000       0x16 ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_info    0x00000000      0x6b6 ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_abbrev  0x00000000      0x17a ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_info    0x00000000      0x725 ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_abbrev  0x00000000      0x17b ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_aranges
-                0x00000000       0x68 ./Drivers/Src/stm32f4xx_gpio_driver.o
+                0x00000000       0x70 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_rnglists
-                0x00000000       0x4c ./Drivers/Src/stm32f4xx_gpio_driver.o
+                0x00000000       0x53 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000       0x81 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000      0xae4 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000       0x22 ./Drivers/Src/stm32f4xx_gpio_driver.o
@@ -99,12 +101,12 @@ Discarded input sections
  .debug_macro   0x00000000      0x103 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000       0x6a ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000      0x1df ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_macro   0x00000000      0x29e ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_macro   0x00000000      0x33b ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000       0xc4 ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_line    0x00000000      0x879 ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_str     0x00000000     0x555c ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_line    0x00000000      0x97c ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_str     0x00000000     0x58d5 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .comment       0x00000000       0x44 ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_frame   0x00000000      0x1a0 ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_frame   0x00000000      0x1c8 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .ARM.attributes
                 0x00000000       0x34 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .group         0x00000000        0xc ./Src/main.o
@@ -841,18 +843,18 @@ LOAD D:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_rnglists
                 0x00000013       0x19 ./Startup/startup_stm32f401retx.o
 
-.debug_macro    0x00000000      0x310
+.debug_macro    0x00000000      0x3ad
  .debug_macro   0x00000000       0x6c ./Src/main.o
- .debug_macro   0x0000006c      0x2a4 ./Src/main.o
+ .debug_macro   0x0000006c      0x341 ./Src/main.o
 
 .debug_line     0x00000000      0x4b6
  .debug_line    0x00000000      0x43b ./Src/main.o
  .debug_line    0x0000043b       0x7b ./Startup/startup_stm32f401retx.o
 
-.debug_str      0x00000000     0x4ea0
- .debug_str     0x00000000     0x4ea0 ./Src/main.o
-                               0x4fbc (size before relaxing)
- .debug_str     0x00004ea0       0x62 ./Startup/startup_stm32f401retx.o
+.debug_str      0x00000000     0x51da
+ .debug_str     0x00000000     0x51da ./Src/main.o
+                               0x52f6 (size before relaxing)
+ .debug_str     0x000051da       0x62 ./Startup/startup_stm32f401retx.o
 
 .comment        0x00000000       0x43
  .comment       0x00000000       0x43 ./Src/main.o
