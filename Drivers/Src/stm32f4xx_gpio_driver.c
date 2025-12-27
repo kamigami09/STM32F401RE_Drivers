@@ -91,7 +91,56 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi)
  */
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 {
+	uint32_t temp = 0;
 
+	//1 . configure the mode of the gpio pin
+
+	if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_ANALOG)
+	{
+		//The non interrupt mode
+		temp = (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+		pGPIOHandle->pGPIOx->MODER &= ~(0x3 << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+		pGPIOHandle->pGPIOx->MODER |= temp;
+
+	}else
+	{
+		//Interrupt mode for later
+	}
+
+	temp = 0;
+
+	//2 . configure the speed
+	temp = (pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandle->pGPIOx->OSPEEDR &= ~(0x3 << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandle->pGPIOx->OSPEEDR |= temp;
+
+	temp = 0;
+
+	//3 . configure the pull up pull down resis
+	temp = (pGPIOHandle->GPIO_PinConfig.GPIO_PuPdControl << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandle->pGPIOx->PUPDR &= ~(0x3 << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandle->pGPIOx->PUPDR |= temp;
+
+	temp = 0;
+
+	//4 . configure the optype
+	temp = (pGPIOHandle->GPIO_PinConfig.GPIO_OPType << (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandle->pGPIOx->OTYPER &= ~(0x1 << (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandle->pGPIOx->OTYPER |= temp;
+
+	temp = 0;
+
+	//5 . configure the alt functionality
+	if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_ALTFN)
+	{
+		//configure the alternate function
+		uint32_t temp1, temp2;
+
+		temp1 = pGPIOHandle->GPIO_PinConfig.GPIO_PinMode / 8;
+		temp2 = pGPIOHandle->GPIO_PinConfig.GPIO_PinMode % 8;
+		pGPIOHandle->pGPIOx->AFR[temp1] &= ~(0xf << (4 * temp2));
+		pGPIOHandle->pGPIOx->AFR[temp1] |= (pGPIOHandle->GPIO_PinConfig.GPIO_AltFunMode << (4 * temp2));
+	}
 }
 /*********************************************************************
  * @fn      		  - GPIO_DeInit

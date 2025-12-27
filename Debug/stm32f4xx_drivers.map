@@ -61,13 +61,14 @@ Discarded input sections
  .group         0x00000000        0xc ./Drivers/Src/stm32f4xx_gpio_driver.o
  .group         0x00000000        0xc ./Drivers/Src/stm32f4xx_gpio_driver.o
  .group         0x00000000        0xc ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .group         0x00000000        0xc ./Drivers/Src/stm32f4xx_gpio_driver.o
  .text          0x00000000        0x0 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .data          0x00000000        0x0 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .bss           0x00000000        0x0 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .text.GPIO_PeriClockControl
                 0x00000000      0x140 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .text.GPIO_Init
-                0x00000000       0x14 ./Drivers/Src/stm32f4xx_gpio_driver.o
+                0x00000000      0x19a ./Drivers/Src/stm32f4xx_gpio_driver.o
  .text.GPIO_DeInit
                 0x00000000       0x14 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .text.GPIO_ReadFromInputPin
@@ -84,13 +85,13 @@ Discarded input sections
                 0x00000000       0x1e ./Drivers/Src/stm32f4xx_gpio_driver.o
  .text.GPIO_IRQHandling
                 0x00000000       0x16 ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_info    0x00000000      0x55e ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_abbrev  0x00000000       0xf9 ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_info    0x00000000      0x598 ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_abbrev  0x00000000      0x143 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_aranges
                 0x00000000       0x68 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_rnglists
-                0x00000000       0x4a ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_macro   0x00000000       0x7c ./Drivers/Src/stm32f4xx_gpio_driver.o
+                0x00000000       0x4b ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_macro   0x00000000       0x81 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000      0xae4 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000       0x22 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000       0x8e ./Drivers/Src/stm32f4xx_gpio_driver.o
@@ -99,8 +100,9 @@ Discarded input sections
  .debug_macro   0x00000000       0x6a ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000      0x1df ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_macro   0x00000000      0x25f ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_line    0x00000000      0x5ae ./Drivers/Src/stm32f4xx_gpio_driver.o
- .debug_str     0x00000000     0x4fbe ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_macro   0x00000000       0xc4 ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_line    0x00000000      0x6ca ./Drivers/Src/stm32f4xx_gpio_driver.o
+ .debug_str     0x00000000     0x51ee ./Drivers/Src/stm32f4xx_gpio_driver.o
  .comment       0x00000000       0x44 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .debug_frame   0x00000000      0x1a0 ./Drivers/Src/stm32f4xx_gpio_driver.o
  .ARM.attributes
