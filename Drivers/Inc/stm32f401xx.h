@@ -137,13 +137,27 @@ typedef struct
 } RCC_RegDef_t;
 
 
+/******************************** GPIO Peripheral Base Address Macros ***************************
+ * Cast GPIO base addresses to GPIO_RegDef_t pointers
+ * Allows direct register access using structure members (e.g. GPIOA->MODER)
+ ***********************************************************************************************/
 
-#define GPIOA							((GPIO_RegDef_t*) GPIOA_BASEADDR)
-#define GPIOB							((GPIO_RegDef_t*) GPIOB_BASEADDR)
-#define GPIOC							((GPIO_RegDef_t*) GPIOC_BASEADDR)
-#define GPIOD							((GPIO_RegDef_t*) GPIOD_BASEADDR)
-#define GPIOE							((GPIO_RegDef_t*) GPIOE_BASEADDR)
-#define GPIOH							((GPIO_RegDef_t*) GPIOH_BASEADDR)
+/* GPIO port register access macros */
+#define GPIOA							((GPIO_RegDef_t*) GPIOA_BASEADDR)	/* GPIO Port A registers */
+#define GPIOB							((GPIO_RegDef_t*) GPIOB_BASEADDR)	/* GPIO Port B registers */
+#define GPIOC							((GPIO_RegDef_t*) GPIOC_BASEADDR)	/* GPIO Port C registers */
+#define GPIOD							((GPIO_RegDef_t*) GPIOD_BASEADDR)	/* GPIO Port D registers */
+#define GPIOE							((GPIO_RegDef_t*) GPIOE_BASEADDR)	/* GPIO Port E registers */
+#define GPIOH							((GPIO_RegDef_t*) GPIOH_BASEADDR)	/* GPIO Port H registers */
+
+
+/******************************** RCC Peripheral Base Address Macro ****************************
+ * Cast RCC base address to RCC_RegDef_t pointer
+ * Used to configure system clocks, resets, and peripheral clock enables
+ ***********************************************************************************************/
+
+/* RCC register access macro */
+#define RCC								((RCC_RegDef_t*) RCC_BASEADDR)		/* RCC registers */
 
 
 #endif /* INC_STM32F401XX_H_ */
